@@ -1,6 +1,10 @@
 package com.assignment.duy.assignmentes;
 
-import android.support.annotation.NavigationRes;
+//import android.support.annotation.NavigationRes;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,10 +15,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
+import java.util.Calendar;
 
-public class MainView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,ExerciseAndDiet.ExerciseAndDietListener{
     private DrawerLayout drawer;
-
+    ExerciseAndDiet exerciseAndDiet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,5 +79,43 @@ public class MainView extends AppCompatActivity implements NavigationView.OnNavi
         } else {
             super.onBackPressed();
         }
+    }
+    public void startAlarm(Calendar c) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, ExerciseAndDiet_Broadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+    public void cancelAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, ExerciseAndDiet_Broadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        ExerciseAndDiet.mTextView.setText("Alarm canceled");
+    }
+    public void startAlarm2(Calendar c) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, ExerciseAndDiet_Broadcast2.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 2, intent, 0);
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+    public void cancelAlarm2() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, ExerciseAndDiet_Broadcast2.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 2, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        ExerciseAndDiet.mTextView2.setText("Alarm canceled");
     }
 }
